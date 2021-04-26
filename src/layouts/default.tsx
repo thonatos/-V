@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 
-import './global.less';
 import * as styles from './global.module.less';
 
 const DefaultLayout: React.FC<Props> = (props) => {
