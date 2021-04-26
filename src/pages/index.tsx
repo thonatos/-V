@@ -6,7 +6,10 @@ import Layout from '../layouts/default';
 const IndexPage: FC<Props> = () => (
   <Layout>
     <div style={{
-      color: '#ccc'
+      color: '#ccc',
+      minHeight: '400px',
+      display: 'flex',
+      alignItems: 'center',
     }}>
       coming soon...
     </div>

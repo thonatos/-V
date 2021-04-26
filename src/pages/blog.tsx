@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import dayjs from 'dayjs';
 import { graphql, PageProps, Link } from 'gatsby';
 
 import Layout from '../layouts/default';
@@ -60,7 +61,7 @@ const BlogPage: FC<Props> = (props) => {
             return (
               <li key={id} className={styles.post}>
                 <Link to={`/${slug}`}>{title}</Link>
-                <span>{date}</span>
+                <span>{dayjs(date).format('YYYY-MM-DD HH:MM:ss')}</span>
               </li>
             );
           })
