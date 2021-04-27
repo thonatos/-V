@@ -1,9 +1,11 @@
 const path = require('path')
 const theme = require('./gastby-theme');
 
+const siteUrl = process.env.SITE_URL || "https://v.implements.io";
+
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://v.implements.io",
+    siteUrl,
     title: "ρV",
     description: "undefined project - ρV",
     copyright: "@2021 - implements.io",
