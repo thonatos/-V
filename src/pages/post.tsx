@@ -67,6 +67,7 @@ const PostPage: FC<Props> = (props) => {
                     {formatDate}
                     {' '}
                     /
+                    {' '}
                     {title}
                   </Link>
                   <span>
