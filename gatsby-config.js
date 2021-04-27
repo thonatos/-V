@@ -13,8 +13,8 @@ module.exports = {
         link: '/',
       },
       {
-        name: 'Blog',
-        link: '/blog',
+        name: 'Post',
+        link: '/post',
       }
     ]
   },
@@ -59,14 +59,14 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `posts`,
-        path: `${__dirname}/src/posts`,
+        name: `docs`,
+        path: `${__dirname}/src/docs`,
       },
     },
     {
       resolve: "gatsby-plugin-page-creator",
       options: {
-        path: `${__dirname}/src/posts`,
+        path: `${__dirname}/src/docs`,
       },
     },
     {
@@ -74,7 +74,7 @@ module.exports = {
       options: {
         extensions: [`.mdx`, `.md`],
         defaultLayouts: {
-          posts: require.resolve("./src/layouts/post.tsx"),
+          docs: require.resolve("./src/layouts/post.tsx"),
           default: require.resolve("./src/layouts/default.tsx"),
         },
       },

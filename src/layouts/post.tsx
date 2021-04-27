@@ -9,6 +9,7 @@ interface Props extends PageProps {
   children: any;
   pageContext: {
     frontmatter: {
+      cetegory: string;
       title: string;
       date: string;
     }
@@ -33,7 +34,7 @@ const PostLayout: FC<Props> = (props) => {
       </Helmet>
 
       <PageContainer
-        header={frontmatter}
+        frontmatter={frontmatter}
       >
         {children}
       </PageContainer>

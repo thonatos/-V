@@ -5,7 +5,7 @@ import { graphql, PageProps, Link } from 'gatsby';
 import Layout from '@/layouts/default';
 import PageContainer from '@/components/PageContainer';
 
-import * as styles from './blog.module.less';
+import * as styles from './post.module.less';
 
 interface Props extends PageProps {
   data: {
@@ -13,6 +13,7 @@ interface Props extends PageProps {
       totalCount: number;
       nodes: Array<{
         frontmatter: {
+          category: string;
           title: string;
           date: string;
         };
@@ -24,13 +25,14 @@ interface Props extends PageProps {
 }
 
 export const pageQuery = graphql`
-  query BlogQuery {  
+  query PostQuery {  
     allMdx {
       totalCount    
       nodes {
         id
         slug
         frontmatter {
+          category
           title
           date
         }
@@ -39,7 +41,7 @@ export const pageQuery = graphql`
   }
 `;
 
-const BlogPage: FC<Props> = (props) => {
+const PostPage: FC<Props> = (props) => {
   const { nodes } = props.data.allMdx;
 
   return (
@@ -51,14 +53,20 @@ const BlogPage: FC<Props> = (props) => {
               const {
                 id, slug,
                 frontmatter: {
+                  category,
                   title,
                   date,
                 },
               } = post;
+
+              const formatDate = dayjs(date).format('YYYY-MM-DD');
+
               return (
                 <li key={id} className={styles.post}>
-                  <Link to={`/${slug}`}>{title}</Link>
-                  <span>{dayjs(date).format('YYYY-MM-DD HH:MM:ss')}</span>
+                  <Link to={`/${slug}`}>
+                  {formatDate} / {title}
+                  </Link>
+                  <span>目录 / {category}</span>
                 </li>
               );
             })
@@ -69,4 +77,4 @@ const BlogPage: FC<Props> = (props) => {
   );
 };
 
-export default BlogPage;
+export default PostPage;

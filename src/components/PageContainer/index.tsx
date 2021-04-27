@@ -5,16 +5,17 @@ import * as styles from './index.module.less';
 
 const PageContainer: React.FC<Props> = ({
   children,
-  header,
+  frontmatter,
   fillSecreen,
 }) => {
-  const { title, date } = header || {};
-
-  const headerNode = header ? (
+  console.log(frontmatter)
+  const { title, date, category } = frontmatter || {};
+  const formatDateTime = dayjs(date).format('YYYY-MM-DD HH:MM:ss');
+  const headerNode = frontmatter ? (
     <PageHeader
       className={styles.header}
       title={title}
-      subTitle={dayjs(date).format('YYYY-MM-DD HH:MM:ss')}
+      subTitle={`${category} / ${formatDateTime}`}
     />
   ) : null;
 
@@ -32,7 +33,8 @@ export default PageContainer;
 
 interface Props {
   children: any;
-  header?: {
+  frontmatter?: {
+    category: string;
     title: string;
     date: string;
   };
