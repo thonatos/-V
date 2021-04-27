@@ -42,6 +42,9 @@ module.exports = {
     {
       resolve: "gatsby-plugin-manifest",
       options: {
+        name: 'ρV',
+        short_name: 'ρV',
+        start_url: `/`,
         icon: "src/images/icon.png",
       },
     },

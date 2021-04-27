@@ -9,7 +9,7 @@ interface Props extends PageProps {
   children: any;
   pageContext: {
     frontmatter: {
-      cetegory: string;
+      category: string;
       title: string;
       date: string;
     }
