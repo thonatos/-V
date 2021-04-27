@@ -8,7 +8,6 @@ const PageContainer: React.FC<Props> = ({
   frontmatter,
   fillSecreen,
 }) => {
-  console.log(frontmatter)
   const { title, date, category } = frontmatter || {};
   const formatDateTime = dayjs(date).format('YYYY-MM-DD HH:MM:ss');
   const headerNode = frontmatter ? (

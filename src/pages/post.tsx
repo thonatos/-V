@@ -64,9 +64,15 @@ const PostPage: FC<Props> = (props) => {
               return (
                 <li key={id} className={styles.post}>
                   <Link to={`/${slug}`}>
-                  {formatDate} / {title}
+                    {formatDate}
+                    {' '}
+                    /
+                    {title}
                   </Link>
-                  <span>目录 / {category}</span>
+                  <span>
+                    目录 /
+                    {category}
+                  </span>
                 </li>
               );
             })
