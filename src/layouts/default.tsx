@@ -1,7 +1,11 @@
 import React from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
+import { useStaticQuery, graphql, Link } from 'gatsby';
+import { Layout } from 'antd';
 
-import * as styles from './default.module.less';
+import Brand from '@/components/Brand';
+import Copyright from '@/components/Copyright';
+
+const { Header, Content, Footer } = Layout;
 
 const DefaultLayout: React.FC<Props> = (props) => {
   const data: DataProps = useStaticQuery(
@@ -22,37 +26,32 @@ const DefaultLayout: React.FC<Props> = (props) => {
   const { title, description, copyright } = data.site.siteMetadata;
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.main}>
+    <Layout>
+      <Header>
+        <Link to="/">
+          <Brand
+            title={title}
+            description={description}
+          />
+        </Link>
+      </Header>
 
-        <div className={styles.header}>
-          <div className={styles.container}>
-            <h1 className={styles.title}>
-              {title}
-            </h1>
-            <p className={styles.description}>
-              {description}
-            </p>
-          </div>
-        </div>
-
+      <Layout>
         {
           children ? (
-            <div className={styles.content}>
-              <div className={styles.container}>
-                {children}
-              </div>
-            </div>
+            <Content>
+              {children}
+            </Content>
           ) : null
         }
+      </Layout>
 
-        <div className={styles.footer}>
-          <div className={styles.container}>
-            {copyright}
-          </div>
-        </div>
-      </div>
-    </div>
+      <Footer>
+        <Copyright
+          copyright={copyright}
+        />
+      </Footer>
+    </Layout>
   );
 };
 

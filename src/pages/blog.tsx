@@ -1,8 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import dayjs from 'dayjs';
 import { graphql, PageProps, Link } from 'gatsby';
 
-import Layout from '../layouts/default';
+import Layout from '@/layouts/default';
+import PageContainer from '@/components/PageContainer';
 
 import * as styles from './blog.module.less';
 
@@ -39,34 +40,31 @@ export const pageQuery = graphql`
 `;
 
 const BlogPage: FC<Props> = (props) => {
-  const [pageNum, setPageNum] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-
-  const { totalCount, nodes } = props.data.allMdx;
-
-  console.log(totalCount, nodes);
+  const { nodes } = props.data.allMdx;
 
   return (
     <Layout>
-      <ul className={styles.posts}>
-        {
-          nodes.map((post) => {
-            const {
-              id, slug,
-              frontmatter: {
-                title,
-                date,
-              },
-            } = post;
-            return (
-              <li key={id} className={styles.post}>
-                <Link to={`/${slug}`}>{title}</Link>
-                <span>{dayjs(date).format('YYYY-MM-DD HH:MM:ss')}</span>
-              </li>
-            );
-          })
-        }
-      </ul>
+      <PageContainer>
+        <ul className={styles.posts}>
+          {
+            nodes.map((post) => {
+              const {
+                id, slug,
+                frontmatter: {
+                  title,
+                  date,
+                },
+              } = post;
+              return (
+                <li key={id} className={styles.post}>
+                  <Link to={`/${slug}`}>{title}</Link>
+                  <span>{dayjs(date).format('YYYY-MM-DD HH:MM:ss')}</span>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </PageContainer>
     </Layout>
   );
 };

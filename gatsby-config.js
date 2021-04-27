@@ -1,3 +1,6 @@
+const path = require('path')
+const theme = require('./gastby-theme');
+
 module.exports = {
   siteMetadata: {
     siteUrl: "https://v.implements.io",
@@ -7,8 +10,18 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: 'gatsby-plugin-root-import',
+      options: {
+        '@': path.join(__dirname, 'src'),
+      }
+    },
+    {
       resolve: `gatsby-plugin-less`,
       options: {
+        lessOptions: {
+          modifyVars: theme,
+          javascriptEnabled: true,
+        },
         cssLoaderOptions: {
           camelCase: false,
         },
@@ -50,18 +63,10 @@ module.exports = {
       options: {
         extensions: [`.mdx`, `.md`],
         defaultLayouts: {
-          // posts: require.resolve("./src/layouts/post.tsx"),
+          posts: require.resolve("./src/layouts/post.tsx"),
           default: require.resolve("./src/layouts/default.tsx"),
         },
       },
-    },
-    // {
-    //   resolve: `gatsby-plugin-typescript`,
-    //   options: {
-    //     isTSX: true,
-    //     jsxPragma: `jsx`,
-    //     allExtensions: true,
-    //   },
-    // },
+    },    
   ],
 };
