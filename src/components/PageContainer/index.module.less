@@ -2,14 +2,15 @@
 
 .wrap {
   padding: @layout-header-padding;
+  margin-top: 24px;
 
   .header {
-    margin-top: 24px;
     background: #fff;
+    box-shadow: 0 1px rgba(0, 0, 0, 0.1);
   }
 
-  .page {    
-    padding: 0 24px 24px 24px;
+  .page {
+    padding: 24px;
     border-radius: 4px;
     overflow: initial;
     background: #fff;
@@ -18,6 +19,10 @@
   &full {
     box-shadow: 0 -1px rgba(0, 0, 0, 0.1);
     min-height: calc(100vh - @layout-header-height - 48px - 20px);
+
+    .header {
+      background: #fff;
+    }
 
     & .page {
       padding: 24px;

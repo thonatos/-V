@@ -7,6 +7,16 @@ module.exports = {
     title: "ρV",
     description: "undefined project - ρV",
     copyright: "@2021 - implements.io",
+    navs: [
+      {
+        name: 'Home',
+        link: '/',
+      },
+      {
+        name: 'Blog',
+        link: '/blog',
+      }
+    ]
   },
   plugins: [
     {
@@ -27,7 +37,7 @@ module.exports = {
         },
       },
     },
-    "gatsby-plugin-image",
+    "gatsby-plugin-image",    
     "gatsby-plugin-sitemap",
     {
       resolve: "gatsby-plugin-manifest",
@@ -37,6 +47,7 @@ module.exports = {
     },
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
+    "gatsby-plugin-react-helmet",
     {
       resolve: "gatsby-source-filesystem",
       options: {
