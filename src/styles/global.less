@@ -1,6 +1,10 @@
 // global styles
 
-@media screen and (device-width: 375px) {
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) {
   .ant-layout-header {
     // padding: 0 25px !important;
     padding: 0 16px !important;
@@ -19,10 +23,11 @@
   .ant-list-item {
     padding: 4px 8px !important;
   }
-  
+
   .ant-menu-item {
     margin: 0 10px !important;
     margin-top: -1px !important;
     margin-bottom: 0 !important;
   }
 }
+
