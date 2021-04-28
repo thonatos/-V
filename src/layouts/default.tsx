@@ -20,7 +20,7 @@ const DefaultLayout: React.FC<Props> = (props) => {
             title
             copyright
             description
-            navs {
+            navMenus {
               name
               link
             }
@@ -30,9 +30,15 @@ const DefaultLayout: React.FC<Props> = (props) => {
     `,
   );
 
-  const { children } = props;
   const {
-    title, description, copyright, navs,
+    children,
+    title: pageTitle,
+  } = props;
+  const {
+    title: siteTitle,
+    description,
+    copyright,
+    navMenus,
   } = data.site.siteMetadata;
 
   const handleNav = ({ key }: any) => {
@@ -46,13 +52,13 @@ const DefaultLayout: React.FC<Props> = (props) => {
     <Layout>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{title}</title>
+        <title>{pageTitle || siteTitle}</title>
       </Helmet>
 
       <Header className={styles.header}>
         <Link to="/">
           <Brand
-            title={title}
+            title={siteTitle}
             description={description}
           />
         </Link>
@@ -64,7 +70,7 @@ const DefaultLayout: React.FC<Props> = (props) => {
           onClick={handleNav}
         >
           {
-            navs.map(({ name, link }) => <Menu.Item key={link}>{name}</Menu.Item>)
+            navMenus.map(({ name, link }) => <Menu.Item key={link}>{name}</Menu.Item>)
           }
         </Menu>
       </Header>
@@ -92,6 +98,7 @@ export default DefaultLayout;
 
 interface Props {
   children: any;
+  title?: string;
 }
 
 interface DataProps {
@@ -100,7 +107,7 @@ interface DataProps {
       title: string;
       copyright: string;
       description: string;
-      navs: Array<{
+      navMenus: Array<{
         name: string;
         link: string;
       }>

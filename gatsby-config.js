@@ -9,7 +9,7 @@ module.exports = {
     title: "ρV",
     description: "undefined project - ρV",
     copyright: "@2021 - implements.io",
-    navs: [
+    navMenus: [
       {
         name: 'Home',
         link: '/',
@@ -21,6 +21,10 @@ module.exports = {
     ]
   },
   plugins: [
+    "gatsby-plugin-image",
+    "gatsby-plugin-sharp",
+    "gatsby-transformer-sharp",
+    "gatsby-plugin-react-helmet",
     {
       resolve: 'gatsby-plugin-root-import',
       options: {
@@ -39,7 +43,6 @@ module.exports = {
         },
       },
     },
-    "gatsby-plugin-image",    
     "gatsby-plugin-sitemap",
     {
       resolve: "gatsby-plugin-manifest",
@@ -50,9 +53,6 @@ module.exports = {
         icon: "src/images/icon.png",
       },
     },
-    "gatsby-plugin-sharp",
-    "gatsby-transformer-sharp",
-    "gatsby-plugin-react-helmet",
     {
       resolve: "gatsby-source-filesystem",
       options: {
@@ -83,6 +83,6 @@ module.exports = {
           default: require.resolve("./src/layouts/default.tsx"),
         },
       },
-    },    
+    },
   ],
 };

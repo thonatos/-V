@@ -70,8 +70,11 @@ const PostPage: FC<Props> = (props) => {
                     {' '}
                     {title}
                   </Link>
-                  <span>
-                    目录 /
+                  <span>                  
+                    目录
+                    {' '}
+                    /
+                    {' '}
                     {category}
                   </span>
                 </li>
