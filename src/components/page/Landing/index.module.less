@@ -1,0 +1,21 @@
+@import '~antd/lib/style/themes/default.less';
+
+.wrap {
+  box-shadow: 0 -1px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - @layout-header-height - 48px - 20px);
+  display: flex;
+
+  .page {
+    flex: auto;
+    padding: 24px;
+    border-radius: 4px;
+    overflow: initial;
+    background: #fff;
+  }
+}
+
+@media screen and (device-width: 375px) {
+  .wrap {
+    min-height: calc(100vh - @layout-header-height - 12px - 20px);
+  }
+}

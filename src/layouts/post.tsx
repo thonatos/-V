@@ -1,9 +1,48 @@
 import React, { FC } from 'react';
+import dayjs from 'dayjs';
+
+import { Tag } from 'antd';
 import { PageProps } from 'gatsby';
 import { Helmet } from 'react-helmet';
 
 import Layout from '@/layouts/default';
-import PageContainer from '@/components/PageContainer';
+import Detail from '@/components/page/Detail';
+
+const PostLayout: FC<Props> = (props) => {
+  const {
+    children,
+    pageContext: {
+      frontmatter,
+    },
+  } = props;
+
+  const { title, date, category } = frontmatter;
+  const dateTime = dayjs(date).format('YYYY-MM-DD HH:MM:ss');
+
+  const tags = category.split(',').map((tag) => (<Tag color="default">{tag}</Tag>));
+
+  const metadata = {
+    title,
+    subTitle: dateTime,
+    tags,
+  };
+  return (
+    <Layout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title}</title>
+      </Helmet>
+
+      <Detail
+        metadata={metadata}
+      >
+        {children}
+      </Detail>
+    </Layout>
+  );
+};
+
+export default PostLayout;
 
 interface Props extends PageProps {
   children: any;
@@ -15,31 +54,3 @@ interface Props extends PageProps {
     }
   }
 }
-
-const PostLayout: FC<Props> = (props) => {
-  const {
-    children,
-    pageContext: {
-      frontmatter,
-    },
-  } = props;
-
-  const { title } = frontmatter;
-
-  return (
-    <Layout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{title}</title>
-      </Helmet>
-
-      <PageContainer
-        frontmatter={frontmatter}
-      >
-        {children}
-      </PageContainer>
-    </Layout>
-  );
-};
-
-export default PostLayout;

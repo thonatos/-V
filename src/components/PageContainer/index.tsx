@@ -1,7 +1,9 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import { PageHeader } from 'antd';
+import { PageHeader, Layout } from 'antd';
 import * as styles from './index.module.less';
+
+const { Content } = Layout;
 
 const PageContainer: React.FC<Props> = ({
   children,
@@ -9,21 +11,21 @@ const PageContainer: React.FC<Props> = ({
   fillSecreen,
 }) => {
   const { title, date, category } = frontmatter || {};
-  const formatDateTime = dayjs(date).format('YYYY-MM-DD HH:MM:ss');
-  const headerNode = frontmatter ? (
-    <PageHeader
-      className={styles.header}
-      title={title}
-      subTitle={`${category} / ${formatDateTime}`}
-    />
-  ) : null;
+
+  const dateTime = dayjs(date).format('YYYY-MM-DD HH:MM:ss');
+  const subTitle = `${category} / ${dateTime}`;
 
   return (
     <div className={fillSecreen ? styles.wrapfull : styles.wrap}>
-      {headerNode}
-      <div className={styles.page}>
-        {children}
-      </div>
+      <PageHeader
+        className={styles.header}
+        title={title}
+        subTitle={subTitle}
+      >
+        <Content className={styles.page}>
+          {children}
+        </Content>
+      </PageHeader>
     </div>
   );
 };

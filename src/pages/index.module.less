@@ -27,3 +27,20 @@
     padding: @layout-header-padding;
   }
 }
+
+@media screen and (device-width: 375px) {
+  .intro {
+    flex-direction: column;
+    padding-left: 0 !important;
+
+    .divider {
+      display: none;
+    }
+  }
+
+  .banner {
+    .comming {
+      padding: 0 16px !important;
+    }
+  }
+}

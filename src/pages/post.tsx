@@ -1,28 +1,11 @@
 import React, { FC } from 'react';
 import dayjs from 'dayjs';
 import { graphql, PageProps, Link } from 'gatsby';
+import { List, Tag, Divider } from 'antd';
 
 import Layout from '@/layouts/default';
-import PageContainer from '@/components/PageContainer';
-
-import * as styles from './post.module.less';
-
-interface Props extends PageProps {
-  data: {
-    allMdx: {
-      totalCount: number;
-      nodes: Array<{
-        frontmatter: {
-          category: string;
-          title: string;
-          date: string;
-        };
-        id: string;
-        slug: string;
-      }>
-    };
-  }
-}
+import Detail from '@/components/page/Detail';
+import DeviceContext from '@/context/device';
 
 export const pageQuery = graphql`
   query PostQuery {  
@@ -36,7 +19,12 @@ export const pageQuery = graphql`
           title
           date
         }
-      }    
+        excerpt      
+        timeToRead
+        wordCount {
+          words
+        }
+      }      
     }
   }
 `;
@@ -45,46 +33,95 @@ const PostPage: FC<Props> = (props) => {
   const { nodes } = props.data.allMdx;
 
   return (
-    <Layout>
-      <PageContainer>
-        <ul className={styles.posts}>
-          {
-            nodes.map((post) => {
-              const {
-                id, slug,
-                frontmatter: {
-                  category,
-                  title,
-                  date,
-                },
-              } = post;
+    <Layout title="Post">
+      <DeviceContext.Consumer>
+        {(device) => (
+          <Detail>
+            <List
+              size="small"
+              dataSource={nodes}
+              itemLayout="vertical"
+              renderItem={(item) => {
+                const {
+                  slug,
 
-              const formatDate = dayjs(date).format('YYYY-MM-DD');
+                  frontmatter: {
+                    category,
+                    title,
+                    date,
+                  },
+                  excerpt,
+                  timeToRead,
+                  wordCount: {
+                    words,
+                  },
+                } = item;
 
-              return (
-                <li key={id} className={styles.post}>
-                  <Link to={`/${slug}`}>
-                    {formatDate}
-                    {' '}
-                    /
-                    {' '}
-                    {title}
-                  </Link>
-                  <span>                  
-                    目录
-                    {' '}
-                    /
-                    {' '}
-                    {category}
-                  </span>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </PageContainer>
+                const dateTime = dayjs(date).format('YYYY-MM-DD');
+                const description = device === 'phone'
+                  ? (<span>{dateTime}</span>)
+                  : (
+                    <>
+                      <span>{dateTime}</span>
+                      <Divider type="vertical" />
+                      <span>
+                        {words}
+                        {' '}
+                        words
+                      </span>
+                      <Divider type="vertical" />
+                      <span>
+                        {timeToRead}
+                        {' '}
+                        minutes
+                      </span>
+                    </>
+                  );
+
+                return (
+                  <List.Item
+                    extra={<Tag color="#adadad">{category}</Tag>}
+                  >
+                    <List.Item.Meta
+                      title={(
+                        <Link to={`/${slug}`}>
+                          {title}
+                        </Link>
+                      )}
+                      description={description}
+                    />
+                    <div>{excerpt}</div>
+                  </List.Item>
+                );
+              }}
+            />
+          </Detail>
+        )}
+      </DeviceContext.Consumer>
     </Layout>
   );
 };
 
 export default PostPage;
+
+interface Props extends PageProps {
+  data: {
+    allMdx: {
+      totalCount: number;
+      nodes: Array<{
+        frontmatter: {
+          category: string;
+          title: string;
+          date: string;
+        };
+        id: string;
+        slug: string;
+        excerpt: string;
+        timeToRead: number;
+        wordCount: {
+          words: number;
+        };
+      }>;
+    };
+  }
+}
