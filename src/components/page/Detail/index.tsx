@@ -13,7 +13,7 @@ const DetailPage: React.FC<Props> = ({
       className={styles.header}
       {...{ ...metadata }}
     >
-      <Content className={styles.page}>
+      <Content>
         {children}
       </Content>
     </PageHeader>
