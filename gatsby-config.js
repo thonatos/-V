@@ -94,8 +94,8 @@ module.exports = {
       options: {
         extensions: [`.mdx`, `.md`],
         defaultLayouts: {
-          docs: require.resolve("./src/layouts/post.tsx"),
-          default: require.resolve("./src/layouts/default.tsx"),
+          docs: require.resolve("./src/templates/post.tsx"),
+          default: require.resolve("./src/templates/default.tsx"),
         },
       },
     },
