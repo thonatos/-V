@@ -16,6 +16,7 @@
     "stylelint": "stylelint '**/*.less' --fix"
   },
   "dependencies": {
+    "@ergatejs/gatsby-source-yuque": "^1.0.0",
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "antd": "^4.15.3",
@@ -32,7 +33,6 @@
     "gatsby-plugin-sharp": "^3.3.1",
     "gatsby-plugin-sitemap": "^3.3.0",
     "gatsby-source-filesystem": "^3.3.0",
-    "gatsby-source-ghost": "^4.2.3",
     "gatsby-transformer-sharp": "^3.3.0",
     "randomcolor": "^0.6.2",
     "rc-texty": "^0.2.0",

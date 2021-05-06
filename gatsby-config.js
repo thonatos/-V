@@ -6,9 +6,9 @@ dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
 });
 
-const SITE_URL = process.env.SITE_URL || "https://v.implements.io";
-const GHOST_API_URL = process.env.GHOST_API_URL;
-const GHOST_CONTENT_API_KEY = process.env.GHOST_CONTENT_API_KEY;
+const YUQUE_GROUP = process.env.YUQUE_GROUP;
+const YUQUE_TOKEN = process.env.YUQUE_TOKEN;
+const YUQUE_ENDPOINT = process.env.YUQUE_ENDPOINT
 
 module.exports = {
   siteMetadata: {
@@ -61,11 +61,20 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-source-ghost`,
+      resolve: `@ergatejs/gatsby-source-yuque`,
       options: {
-        apiUrl: GHOST_API_URL,
-        contentApiKey: GHOST_CONTENT_API_KEY,
-        version: `v3`
+        queue: {
+          concurrency: 20,
+        },
+        yuque: {
+          token: YUQUE_TOKEN,
+          endpoint: YUQUE_ENDPOINT,
+        },
+        group: YUQUE_GROUP,
+        filter: {
+          type: 'Column',
+          slug: 'trading'
+        }
       }
     },
     {
