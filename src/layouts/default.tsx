@@ -15,7 +15,7 @@ const { Header, Content, Footer } = Layout;
 const DefaultLayout: React.FC<Props> = (props) => {
   const data: DataProps = useStaticQuery(
     graphql`
-      query DLQuery {
+      query {
         site {
           siteMetadata {
             title

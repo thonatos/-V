@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import dayjs from 'dayjs';
+
 import { graphql, PageProps, Link } from 'gatsby';
 import { List, Tag, Divider } from 'antd';
 
@@ -7,33 +8,43 @@ import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
 import DeviceContext from '@/context/device';
 
-export const pageQuery = graphql`
-  query {  
-    allMdx {
-      totalCount    
+export const yuqueBookQuery = graphql`
+  query($id: String!, $_id: Int!) {
+    allYuqueDoc(filter: { book_id: { eq: $_id }, status: { eq: 1 } }) {
       nodes {
         id
         slug
-        frontmatter {
-          category
-          title
-          date
-        }
-        excerpt      
-        timeToRead
-        wordCount {
-          words
-        }
-      }      
+        status
+        title
+        cover
+        book_id
+        created_at
+        word_count
+      }
     }
+    yuqueBookDetail(id: {eq: $id }) {
+      id
+      name
+      slug
+    } 
   }
 `;
 
-const PostPage: FC<Props> = (props) => {
-  const { nodes } = props.data.allMdx;
+const YuqueBookTemplate: FC<Props> = (props) => {
+  const {
+    data,
+  } = props;
+
+  const {
+    nodes,
+  } = data.allYuqueDoc;
+
+  const {
+    slug: bookSlug,
+  } = data.yuqueBookDetail;
 
   return (
-    <Layout title="Post">
+    <Layout title="Book">
       <DeviceContext.Consumer>
         {(device) => (
           <Detail>
@@ -41,23 +52,19 @@ const PostPage: FC<Props> = (props) => {
               size="small"
               dataSource={nodes}
               itemLayout="vertical"
+              rowKey="id"
               renderItem={(item) => {
                 const {
+                  title,
                   slug,
-
-                  frontmatter: {
-                    category,
-                    title,
-                    date,
-                  },
-                  excerpt,
-                  timeToRead,
-                  wordCount: {
-                    words,
-                  },
+                  created_at,
+                  word_count,
+                  description: excerpt,
                 } = item;
 
-                const dateTime = dayjs(date).format('YYYY-MM-DD');
+                const timeToRead = Math.ceil(word_count / 500);
+                const dateTime = dayjs(created_at).format('YYYY-MM-DD');
+
                 const description = device === 'phone'
                   ? (<span>{dateTime}</span>)
                   : (
@@ -65,7 +72,7 @@ const PostPage: FC<Props> = (props) => {
                       <span>{dateTime}</span>
                       <Divider type="vertical" />
                       <span>
-                        {words}
+                        {word_count}
                         {' '}
                         words
                       </span>
@@ -80,11 +87,11 @@ const PostPage: FC<Props> = (props) => {
 
                 return (
                   <List.Item
-                    extra={<Tag color="#adadad">{category}</Tag>}
+                    extra={<Tag color="#adadad">{bookSlug}</Tag>}
                   >
                     <List.Item.Meta
                       title={(
-                        <Link to={`/${slug}`}>
+                        <Link to={`/book/${bookSlug}/${slug}`}>
                           {title}
                         </Link>
                       )}
@@ -102,26 +109,26 @@ const PostPage: FC<Props> = (props) => {
   );
 };
 
-export default PostPage;
+export default YuqueBookTemplate;
 
 interface Props extends PageProps {
   data: {
-    allMdx: {
+    allYuqueDoc: {
       totalCount: number;
       nodes: Array<{
-        frontmatter: {
-          category: string;
-          title: string;
-          date: string;
-        };
-        id: string;
+        id: number;
         slug: string;
-        excerpt: string;
-        timeToRead: number;
-        wordCount: {
-          words: number;
-        };
-      }>;
+        title: string;
+        description: string;
+        status: number;
+        created_at: Date;
+        word_count: number;
+      }>
+    };
+    yuqueBookDetail: {
+      id: string;
+      slug: string;
+      name: string;
     };
   }
 }

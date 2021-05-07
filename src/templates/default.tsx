@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet';
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
 
-const PostLayout: FC<Props> = (props) => {
+const DefaultTemplate: FC<Props> = (props) => {
   const {
     children,
     pageContext: {
@@ -42,7 +42,7 @@ const PostLayout: FC<Props> = (props) => {
   );
 };
 
-export default PostLayout;
+export default DefaultTemplate;
 
 interface Props extends PageProps {
   children: any;

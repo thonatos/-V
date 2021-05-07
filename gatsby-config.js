@@ -3,12 +3,15 @@ const theme = require('./gastby-theme');
 const dotenv = require("dotenv");
 
 dotenv.config({
-  path: `.env.${process.env.NODE_ENV}`,
+  path: '.env',
 });
 
+const SITE_URL = process.env.SITE_URL;
 const YUQUE_GROUP = process.env.YUQUE_GROUP;
 const YUQUE_TOKEN = process.env.YUQUE_TOKEN;
-const YUQUE_ENDPOINT = process.env.YUQUE_ENDPOINT
+const YUQUE_ENDPOINT = process.env.YUQUE_ENDPOINT;
+const YUQUE_FILTER_TYPE = process.env.YUQUE_FILTER_TYPE;
+const YUQUE_FILTER_SLUG = process.env.YUQUE_FILTER_SLUG;
 
 module.exports = {
   siteMetadata: {
@@ -72,8 +75,8 @@ module.exports = {
         },
         group: YUQUE_GROUP,
         filter: {
-          type: 'Column',
-          slug: 'trading'
+          type: YUQUE_FILTER_TYPE,
+          slug: YUQUE_FILTER_SLUG
         }
       }
     },
