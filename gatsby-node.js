@@ -1,21 +1,19 @@
-const path = require(`path`);
+const path = require('path');
+const yaml = require('js-yaml');
 
 const parseId = str => {
   const arr = (str || '').split('__');
   return parseInt(arr[arr.length - 1]);
 }
 
-exports.onPostBuild = ({ reporter }) => {
-  reporter.info(`Your Gatsby site has been built!`);
-};
+const prefixPath = '/book';
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions;
   
-  const yuqueBookTemplate = path.resolve(`src/templates/yuque/book.tsx`);
-  const yuqueDocDetailTemplate = path.resolve(`src/templates/yuque/docDetail.tsx`);
+  const yuqueDocDetailTemplate = path.resolve(`src/templates/yuque/docDetail.tsx`); 
+  const yuqueBookDetailTemplate = path.resolve(`src/templates/yuque/bookDetail.tsx`);
   
-
   const result = await graphql(`
     query YuqueQuery {
       allYuqueDocDetail {
@@ -30,59 +28,13 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       }
       allYuqueBookDetail {
         nodes {
-          id          
-          slug          
+          id
+          slug
+          toc_yml
         }
       }
     }
   `);
-
-  // const result = await graphql(`
-  //   query YuqueQuery {
-  //     allYuqueDocDetail {
-  //       nodes {
-  //         id
-  //         slug
-  //         title
-  //         cover
-  //         description
-  //         book_id
-  //         created_at
-  //         custom_description
-  //         status
-  //         user_id
-  //         updated_at
-  //         view_status
-  //         word_count
-  //         body
-  //         body_html
-  //         book {
-  //           _serializer
-  //           description
-  //           id
-  //           name
-  //           namespace
-  //           slug
-  //           type
-  //         }
-  //       }
-  //     }
-  //     allYuqueBookDetail {
-  //       nodes {
-  //         id
-  //         _serializer
-  //         description
-  //         name
-  //         namespace
-  //         slug
-  //         toc
-  //         toc_yml
-  //         type
-  //         updated_at
-  //       }
-  //     }
-  //   }
-  // `);
 
   if (result.errors) {
     throw new Error(result.errors);
@@ -101,7 +53,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     }
 
     createPage({
-      path: `/book/${bookSlug}/${slug}/`,
+      path: `${prefixPath}/${bookSlug}/${slug}/`,
       component: yuqueDocDetailTemplate,
       context: {
         id,
@@ -113,13 +65,15 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   // create yuque books
   books.forEach(node => {
-    const { id, slug } = node;
+    const { id, slug, toc_yml } = node;
+    const toc = yaml.load(toc_yml);
     
     createPage({
-      path: `/book/${slug}/`,
-      component: yuqueBookTemplate,
+      path: `${prefixPath}/${slug}/`,
+      component: yuqueBookDetailTemplate,
       context: {        
         id,
+        toc,
         slug,
         _id: parseId(id),        
       },

@@ -68,6 +68,7 @@ const YuqueDocDetailTemplate: FC<Props> = (props) => {
       <Helmet>
         <meta charSet="utf-8" />
         <title>{title}</title>
+        <link rel="stylesheet" href="//editor.yuque.com/ne-editor/lake-content-v1.css" />
       </Helmet>
 
       <Detail
