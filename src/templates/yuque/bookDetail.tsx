@@ -82,5 +82,4 @@ interface Props extends PageProps {
     toc: any;
     _id: number;
   };
-
 }

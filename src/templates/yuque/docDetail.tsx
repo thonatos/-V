@@ -42,6 +42,9 @@ export const yuqueDocDetailQuery = graphql`
 const YuqueDocDetailTemplate: FC<Props> = (props) => {
   const {
     data,
+    pageContext: {
+      _body_html,
+    },
   } = props;
 
   const {
@@ -75,8 +78,8 @@ const YuqueDocDetailTemplate: FC<Props> = (props) => {
         metadata={metadata}
       >
         <section
-          className="content-body load-external-scripts"
-          dangerouslySetInnerHTML={{ __html: body_html }}
+          className="content-body lake-content"
+          dangerouslySetInnerHTML={{ __html: _body_html || body_html }}
         />
       </Detail>
     </Layout>
@@ -98,5 +101,11 @@ interface Props extends PageProps {
         slug: string;
       };
     }
-  }
+  };
+  pageContext: {
+    id: string;
+    slug: string;
+    _id: number;
+    _body_html: string;
+  };
 }
