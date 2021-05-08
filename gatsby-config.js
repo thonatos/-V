@@ -7,11 +7,13 @@ dotenv.config({
 });
 
 const SITE_URL = process.env.SITE_URL;
+
 const YUQUE_GROUP = process.env.YUQUE_GROUP;
 const YUQUE_TOKEN = process.env.YUQUE_TOKEN;
 const YUQUE_ENDPOINT = process.env.YUQUE_ENDPOINT;
 const YUQUE_FILTER_TYPE = process.env.YUQUE_FILTER_TYPE;
 const YUQUE_FILTER_SLUG = process.env.YUQUE_FILTER_SLUG;
+const YUQUE_ASSETS_DIR_PREFIX = process.env.YUQUE_ASSETS_DIR_PREFIX;
 
 module.exports = {
   siteMetadata: {
@@ -81,6 +83,9 @@ module.exports = {
         filter: {
           type: YUQUE_FILTER_TYPE,
           slug: YUQUE_FILTER_SLUG
+        },
+        assets: {
+          dirPrefix: YUQUE_ASSETS_DIR_PREFIX,
         }
       }
     },

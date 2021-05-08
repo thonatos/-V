@@ -42,9 +42,6 @@ export const yuqueDocDetailQuery = graphql`
 const YuqueDocDetailTemplate: FC<Props> = (props) => {
   const {
     data,
-    pageContext: {
-      _body_html,
-    },
   } = props;
 
   const {
@@ -71,15 +68,14 @@ const YuqueDocDetailTemplate: FC<Props> = (props) => {
       <Helmet>
         <meta charSet="utf-8" />
         <title>{title}</title>
-        <link rel="stylesheet" href="//editor.yuque.com/ne-editor/lake-content-v1.css" />
       </Helmet>
 
       <Detail
         metadata={metadata}
       >
         <section
-          className="content-body lake-content"
-          dangerouslySetInnerHTML={{ __html: _body_html || body_html }}
+          className="content-body lake"
+          dangerouslySetInnerHTML={{ __html: body_html }}
         />
       </Detail>
     </Layout>
@@ -106,6 +102,5 @@ interface Props extends PageProps {
     id: string;
     slug: string;
     _id: number;
-    _body_html: string;
   };
 }
