@@ -10,10 +10,10 @@ const prefixPath = '/book';
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions;
-  
-  const yuqueDocDetailTemplate = path.resolve(`src/templates/yuque/docDetail.tsx`); 
+
+  const yuqueDocDetailTemplate = path.resolve(`src/templates/yuque/docDetail.tsx`);
   const yuqueBookDetailTemplate = path.resolve(`src/templates/yuque/bookDetail.tsx`);
-  
+
   const result = await graphql(`
     query YuqueQuery {
       allYuqueDocDetail {
@@ -40,7 +40,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     throw new Error(result.errors);
   }
 
-  
+
   const docs = result.data.allYuqueDocDetail.nodes;
   const books = result.data.allYuqueBookDetail.nodes;
 
@@ -48,7 +48,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   docs.forEach(node => {
     const { id, slug, status, book: { slug: bookSlug } } = node;
 
-    if(status !== 1) {
+    if (status !== 1) {
       return;
     }
 
@@ -67,16 +67,33 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   books.forEach(node => {
     const { id, slug, toc_yml } = node;
     const toc = yaml.load(toc_yml);
-    
+
     createPage({
       path: `${prefixPath}/${slug}/`,
       component: yuqueBookDetailTemplate,
-      context: {        
+      context: {
         id,
         toc,
         slug,
-        _id: parseId(id),        
+        _id: parseId(id),
       },
     })
   })
 };
+
+
+exports.onCreateWebpackConfig = ({ stage, getConfig, actions }) => {
+  if (stage === 'build-javascript' || stage === 'develop') {
+    const config = getConfig();
+
+    const miniCssExtractPlugin = config.plugins.find(
+      (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
+    );
+
+    if (miniCssExtractPlugin) {
+      miniCssExtractPlugin.options.ignoreOrder = true;
+    }
+
+    actions.replaceWebpackConfig(config);    
+  }
+}
