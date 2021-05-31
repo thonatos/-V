@@ -27,11 +27,15 @@ module.exports = {
         link: '/',
       },
       {
-        name: 'Posts',
+        name: 'Trading',
+        link: '/trading',
+      },
+      {
+        name: 'Post',
         link: '/post',
       },
       {
-        name: 'Trading',
+        name: 'Book',
         link: '/book/trading/',
       }
     ]

@@ -4,11 +4,17 @@ import {
 } from 'gatsby';
 import { Layout, Menu } from 'antd';
 import { Helmet } from 'react-helmet';
+import { configResponsive } from 'ahooks';
 
 import Brand from '@/components/Brand';
 import Copyright from '@/components/Copyright';
-import Provider from '@/components/Provider';
 import * as styles from './default.module.less';
+
+configResponsive({
+  phone: 0,
+  tablet: 800,
+  desktop: 1200,
+});
 
 const { Header, Content, Footer } = Layout;
 
@@ -52,50 +58,49 @@ const DefaultLayout: React.FC<Props> = (props) => {
   const pageTitle = title ? `${title} - ${siteTitle}` : siteTitle;
 
   return (
-    <Provider>
-      <Layout>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{pageTitle}</title>
-        </Helmet>
 
-        <Header className={styles.header}>
-          <Link to="/">
-            <Brand
-              title={siteTitle}
-              description={description}
-            />
-          </Link>
+    <Layout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{pageTitle}</title>
+      </Helmet>
 
-          <Menu
-            theme="light"
-            mode="horizontal"
-            // defaultSelectedKeys={['2']}
-            onClick={handleNav}
-          >
-            {
-              navMenus.map(({ name, link }) => <Menu.Item key={link}>{name}</Menu.Item>)
-            }
-          </Menu>
-        </Header>
-
-        <Layout>
-          {
-            children ? (
-              <Content>
-                {children}
-              </Content>
-            ) : null
-          }
-        </Layout>
-
-        <Footer>
-          <Copyright
-            copyright={copyright}
+      <Header className={styles.header}>
+        <Link to="/">
+          <Brand
+            title={siteTitle}
+            description={description}
           />
-        </Footer>
+        </Link>
+
+        <Menu
+          theme="light"
+          mode="horizontal"
+          // defaultSelectedKeys={['2']}
+          onClick={handleNav}
+        >
+          {
+            navMenus.map(({ name, link }) => <Menu.Item key={link}>{name}</Menu.Item>)
+          }
+        </Menu>
+      </Header>
+
+      <Layout>
+        {
+          children ? (
+            <Content>
+              {children}
+            </Content>
+          ) : null
+        }
       </Layout>
-    </Provider>
+
+      <Footer>
+        <Copyright
+          copyright={copyright}
+        />
+      </Footer>
+    </Layout>
   );
 };
 

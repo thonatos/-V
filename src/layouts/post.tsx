@@ -4,9 +4,16 @@ import dayjs from 'dayjs';
 import { Tag } from 'antd';
 import { PageProps } from 'gatsby';
 import { Helmet } from 'react-helmet';
+import { configResponsive } from 'ahooks';
 
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
+
+configResponsive({
+  phone: 0,
+  tablet: 800,
+  desktop: 1200,
+});
 
 const PostLayout: FC<Props> = (props) => {
   const {
