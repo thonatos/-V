@@ -1,9 +1,14 @@
+# common
 node_modules/
 .cache/
-public
-static/yuque
 
-package-lock.json
 yarn.lock
+package-lock.json
 
 .env*
+
+# assets
+public
+static/yuque
+static/*.png
+static/*.svg

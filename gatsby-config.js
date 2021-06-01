@@ -27,17 +27,17 @@ module.exports = {
         link: '/',
       },
       {
-        name: 'Trading',
-        link: '/trading',
-      },
-      {
         name: 'Post',
         link: '/post',
       },
       {
         name: 'Book',
         link: '/book/trading/',
-      }
+      },
+      {
+        name: 'Automation',
+        link: '/automation',
+      },
     ]
   },
   plugins: [
