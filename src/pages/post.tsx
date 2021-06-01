@@ -32,7 +32,7 @@ export const pageQuery = graphql`
 const PostPage: FC<Props> = (props) => {
   const { nodes } = props.data.allMdx;
   const responsive = useResponsive();
-  const [device] = Object.entries(responsive).find(([, actived]) => !actived) || [];
+  const [device] = Object.entries(responsive || {}).find(([, actived]) => !actived) || [];
 
   return (
     <Layout title="Post">
