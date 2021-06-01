@@ -31,22 +31,52 @@ const columns = [
     render: (val: string) => val && val.toUpperCase(),
   },
   {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-    render: (val: number) => val || '-',
-  },
-  {
     title: 'Take Profit',
     dataIndex: 'take_profit',
     key: 'take_profit',
-    render: (val: number) => val || '-',
+    render: (val: number) => val && `${val}%` || '-',
   },
   {
     title: 'Stop Loss',
     dataIndex: 'stop_loss',
     key: 'stop_loss',
+    render: (val: number) => val && `${val}%` || '-',
+  },
+  {
+    title: 'Open',
+    dataIndex: 'open',
+    key: 'open',
     render: (val: number) => val || '-',
+  },
+  {
+    title: 'Close',
+    dataIndex: 'close',
+    key: 'close',
+    render: (val: number) => val || '-',
+  },
+  {
+    title: 'Contracts',
+    dataIndex: 'contracts',
+    key: 'contracts',
+  },
+  {
+    title: 'Profit',
+    dataIndex: 'profit',
+    key: 'profit',
+    render: (_: number, record: any) => {
+      const { side, open, close, contracts } = record;
+      const diff = close - open;
+
+      if (side === 'long') {
+        return (diff * contracts).toFixed(4);
+      }
+
+      if (side === 'short') {
+        return -(diff * contracts).toFixed(4);
+      }
+
+      return '';
+    },
   },
   {
     title: 'Status',
@@ -81,6 +111,7 @@ const AutomationPage: FC<Props> = () => {
           title={() => <div>Quantitative/Automation Trading</div>}
           columns={columns}
           dataSource={data}
+          scroll={{ x: 1300 }}
         />
       </Detail>
     </Layout>
