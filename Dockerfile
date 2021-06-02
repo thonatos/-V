@@ -22,11 +22,16 @@ WORKDIR /usr/src/gatsby
 COPY package.json /usr/src/gatsby
 
 RUN \
-  mkdir -p /usr/src/gatsby/public \
-  && yarn \
+  mkdir -p /usr/src/gatsby/public \  
+  && yarn
+
+RUN \
+  echo $YUQUE_ENDPOINT \
   && yarn build
 
 # runner
 FROM nginx:stable-alpine
+
+RUN rm -f /usr/share/nginx/html/*.*
 
 COPY --from=build /usr/src/gatsby/public /usr/share/nginx/html
