@@ -1,10 +1,14 @@
 import React, { FC } from 'react';
 import dayjs from 'dayjs';
-import { Table } from 'antd';
-import { useRequest } from 'ahooks';
+import {
+  Affix, Drawer, Table, Button,
+} from 'antd';
+import { useRequest, useBoolean } from 'ahooks';
+import { CalculatorOutlined } from '@ant-design/icons';
 
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
+import Calculator from '@/components/Calculator';
 
 const columns = [
   {
@@ -64,7 +68,9 @@ const columns = [
     dataIndex: 'profit',
     key: 'profit',
     render: (_: number, record: any) => {
-      const { side, open, close, contracts } = record;
+      const {
+        side, open, close, contracts,
+      } = record;
       const diff = close - open;
 
       if (side === 'long') {
@@ -93,6 +99,7 @@ const columns = [
 ];
 
 const AutomationPage: FC<Props> = () => {
+  const [visible, { toggle }] = useBoolean(false);
   const { data, error, loading } = useRequest(() => ({
     url: 'https://api.implements.io/orders',
     method: 'get',
@@ -104,7 +111,16 @@ const AutomationPage: FC<Props> = () => {
 
   return (
     <Layout title="Trading">
+      <Affix style={{ position: 'absolute', bottom: 16, right: 16 }}>
+        <Button type="primary" onClick={() => toggle()}>
+          <CalculatorOutlined />
+          {' '}
+          Calculator
+        </Button>
+      </Affix>
+
       <Detail>
+
         <Table
           rowKey="id"
           loading={loading}
@@ -113,6 +129,17 @@ const AutomationPage: FC<Props> = () => {
           dataSource={data}
           scroll={{ x: 1300 }}
         />
+
+        <Drawer
+          title="Calculator"
+          visible={visible}
+          width={800}
+          onClose={() => toggle()}
+          mask
+          maskClosable={false}
+        >
+          <Calculator />
+        </Drawer>
       </Detail>
     </Layout>
   );
