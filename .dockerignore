@@ -1,0 +1,10 @@
+# dir
+node_modules
+public
+.cache
+.git
+
+# file
+static/*.svg
+static/*.png
+.env
