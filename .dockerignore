@@ -6,4 +6,8 @@ node_modules
 # file
 static/*.svg
 static/*.png
+
 .env
+
+# other
+public/yuque
