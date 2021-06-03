@@ -3,12 +3,32 @@ import dayjs from 'dayjs';
 import {
   Affix, Drawer, Table, Button,
 } from 'antd';
-import { useRequest, useBoolean } from 'ahooks';
+import { useRequest, useBoolean, useResponsive } from 'ahooks';
 import { CalculatorOutlined } from '@ant-design/icons';
 
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
 import Calculator from '@/components/Calculator';
+
+import * as styles from './index.module.less';
+
+const formatName = (val: string) => {
+  if (!val) {
+    return null;
+  }
+
+  return val.toUpperCase();
+};
+
+const formatPercent = (val: number) => {
+  if (!val) {
+    return '-';
+  }
+
+  return `${val}%`;
+};
+
+const formatValue = (val: number) => val || '-';
 
 const columns = [
   {
@@ -20,43 +40,43 @@ const columns = [
     title: 'Exchange',
     dataIndex: 'exchange',
     key: 'exchange',
-    render: (val: string) => val && val.toUpperCase(),
+    render: formatName,
   },
   {
     title: 'Pair',
     dataIndex: 'pair',
     key: 'pair',
-    render: (val: string) => val && val.toUpperCase(),
+    render: formatName,
   },
   {
     title: 'Side',
     dataIndex: 'side',
     key: 'side',
-    render: (val: string) => val && val.toUpperCase(),
+    render: formatName,
   },
   {
     title: 'Take Profit',
     dataIndex: 'take_profit',
     key: 'take_profit',
-    render: (val: number) => val && `${val}%` || '-',
+    render: formatPercent,
   },
   {
     title: 'Stop Loss',
     dataIndex: 'stop_loss',
     key: 'stop_loss',
-    render: (val: number) => val && `${val}%` || '-',
+    render: formatPercent,
   },
   {
     title: 'Open',
     dataIndex: 'open',
     key: 'open',
-    render: (val: number) => val || '-',
+    render: formatValue,
   },
   {
     title: 'Close',
     dataIndex: 'close',
     key: 'close',
-    render: (val: number) => val || '-',
+    render: formatValue,
   },
   {
     title: 'Contracts',
@@ -98,9 +118,24 @@ const columns = [
   },
 ];
 
+const DRAWER_WIDTH_MAP = {
+  phone: 300,
+  table: 480,
+  desktop: 800,
+};
+
+type Device = 'phone' | 'table' | 'desktop';
+
 const AutomationPage: FC<Props> = () => {
   const [visible, { toggle }] = useBoolean(false);
-  const { data, error, loading } = useRequest(() => ({
+  const responsive = useResponsive();
+  const [device] = Object.entries(responsive || {}).find(([, actived]) => !actived) || [];
+
+  const drawerWith = device ? DRAWER_WIDTH_MAP[device as Device] : 400;
+
+  const {
+    data, error, loading, run,
+  } = useRequest(() => ({
     url: 'https://api.implements.io/orders',
     method: 'get',
   }));
@@ -110,7 +145,7 @@ const AutomationPage: FC<Props> = () => {
   }
 
   return (
-    <Layout title="Trading">
+    <Layout title="Automation">
       <Affix style={{ position: 'absolute', bottom: 16, right: 16 }}>
         <Button type="primary" onClick={() => toggle()}>
           <CalculatorOutlined />
@@ -124,7 +159,20 @@ const AutomationPage: FC<Props> = () => {
         <Table
           rowKey="id"
           loading={loading}
-          title={() => <div>Quantitative/Automation Trading</div>}
+          title={() => (
+            <div className={styles.title}>
+              <span>Quantitative/Automation Trading</span>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                  run();
+                }}
+              >
+                Reload
+              </Button>
+            </div>
+          )}
           columns={columns}
           dataSource={data}
           scroll={{ x: 1300 }}
@@ -133,7 +181,7 @@ const AutomationPage: FC<Props> = () => {
         <Drawer
           title="Calculator"
           visible={visible}
-          width={800}
+          width={drawerWith}
           onClose={() => toggle()}
           mask
           maskClosable={false}

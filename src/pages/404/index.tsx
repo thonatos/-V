@@ -5,7 +5,7 @@ import { Divider } from 'antd';
 import Layout from '@/layouts/default';
 import Landing from '@/components/page/Landing';
 
-import * as styles from './404.module.less';
+import * as styles from './index.module.less';
 
 const NotFoundPage = () => (
   <Layout title="PageNotFound">

@@ -29,13 +29,13 @@ export const pageQuery = graphql`
   }
 `;
 
-const PostPage: FC<Props> = (props) => {
+const IndexPage: FC<Props> = (props) => {
   const { nodes } = props.data.allMdx;
-  const responsive = useResponsive();
-  const [device] = Object.entries(responsive || {}).find(([, actived]) => !actived) || [];
+  const responsive = useResponsive() || {};
+  const isLarge = responsive.large;
 
   return (
-    <Layout title="Post">
+    <Layout title="News">
       <Detail>
         <List
           size="small"
@@ -58,9 +58,8 @@ const PostPage: FC<Props> = (props) => {
             } = item;
 
             const dateTime = dayjs(date).format('YYYY-MM-DD');
-            const description = device === 'phone'
-              ? (<span>{dateTime}</span>)
-              : (
+            const description = isLarge
+              ? (
                 <>
                   <span>{dateTime}</span>
                   <Divider type="vertical" />
@@ -76,7 +75,8 @@ const PostPage: FC<Props> = (props) => {
                     minutes
                   </span>
                 </>
-              );
+              )
+              : (<span>{dateTime}</span>);
 
             return (
               <List.Item
@@ -100,7 +100,7 @@ const PostPage: FC<Props> = (props) => {
   );
 };
 
-export default PostPage;
+export default IndexPage;
 
 interface Props extends PageProps {
   data: {
