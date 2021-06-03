@@ -3,10 +3,10 @@ import { Form, Button, InputNumber } from 'antd';
 
 const Calculator: React.FC<Props> = () => {
   const [values, setValues] = useState({
-    open: 0,
+    open: 36000,
     close: 0,
-    take_profit: 4.0,
-    stop_loss: 4.0,
+    take_profit: 2.0,
+    stop_loss: 1.0,
   });
 
   const onFinish = (values: any) => {
@@ -28,9 +28,9 @@ const Calculator: React.FC<Props> = () => {
     open, close, take_profit, stop_loss,
   } = values;
 
-  const _takeProfit = (open * (1 + take_profit / 100)).toFixed(4);
-  const _stopLoss = (open * (1 - stop_loss / 100)).toFixed(4);
-  const _close = (close - open).toFixed(4);
+  const targetTakeProfit = (open * (1 + take_profit / 100)).toFixed(4);
+  const targetStopLoss = (open * (1 - stop_loss / 100)).toFixed(4);
+  const targetClose = (close - open).toFixed(4);
 
   return (
     <Form
@@ -53,7 +53,7 @@ const Calculator: React.FC<Props> = () => {
         label="Close"
         name="close"
         rules={[{ required: false }]}
-        extra={_close}
+        extra={targetClose}
       >
         <InputNumber />
       </Form.Item>
@@ -62,7 +62,7 @@ const Calculator: React.FC<Props> = () => {
         label="Take Profit"
         name="take_profit"
         rules={[{ required: false }]}
-        extra={_takeProfit}
+        extra={targetTakeProfit}
       >
         <InputNumber
           min={0}
@@ -75,7 +75,7 @@ const Calculator: React.FC<Props> = () => {
         label="Stop Loss"
         name="stop_loss"
         rules={[{ required: false }]}
-        extra={_stopLoss}
+        extra={targetStopLoss}
       >
         <InputNumber
           min={0}

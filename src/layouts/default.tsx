@@ -1,19 +1,19 @@
 import React from 'react';
 import {
-  useStaticQuery, graphql, Link, navigate,
+  useStaticQuery, graphql, Link,
 } from 'gatsby';
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import { Helmet } from 'react-helmet';
 import { configResponsive } from 'ahooks';
-
 import Brand from '@/components/Brand';
 import Copyright from '@/components/Copyright';
+import NavMenu from '@/components/NavMenu';
 import * as styles from './default.module.less';
 
 configResponsive({
-  phone: 0,
-  tablet: 800,
-  desktop: 1200,
+  small: 0,
+  middle: 800,
+  large: 1200,
 });
 
 const { Header, Content, Footer } = Layout;
@@ -48,13 +48,6 @@ const DefaultLayout: React.FC<Props> = (props) => {
     navMenus,
   } = data.site.siteMetadata;
 
-  const handleNav = ({ key }: any) => {
-    if (!key) {
-      return;
-    }
-    navigate(key);
-  };
-
   const pageTitle = title ? `${title} - ${siteTitle}` : siteTitle;
 
   return (
@@ -73,16 +66,7 @@ const DefaultLayout: React.FC<Props> = (props) => {
           />
         </Link>
 
-        <Menu
-          theme="light"
-          mode="horizontal"
-          // defaultSelectedKeys={['2']}
-          onClick={handleNav}
-        >
-          {
-            navMenus.map(({ name, link }) => <Menu.Item key={link}>{name}</Menu.Item>)
-          }
-        </Menu>
+        <NavMenu navMenus={navMenus} />
       </Header>
 
       <Layout>
