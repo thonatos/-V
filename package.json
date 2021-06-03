@@ -16,7 +16,7 @@
     "stylelint": "stylelint '**/*.less' --fix"
   },
   "dependencies": {
-    "@ergatejs/gatsby-source-yuque": "^1.1.3",
+    "@ergatejs/gatsby-source-yuque": "^1.2.1",
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "ahooks": "^2.10.4",

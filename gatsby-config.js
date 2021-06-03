@@ -14,6 +14,7 @@ const YUQUE_ENDPOINT = process.env.YUQUE_ENDPOINT;
 const YUQUE_FILTER_TYPE = process.env.YUQUE_FILTER_TYPE;
 const YUQUE_FILTER_SLUG = process.env.YUQUE_FILTER_SLUG;
 const YUQUE_ASSETS_DIR_PREFIX = process.env.YUQUE_ASSETS_DIR_PREFIX;
+const YUQUE_ASSETS_REMOTE_PREFIX = process.env.YUQUE_ASSETS_REMOTE_PREFIX;
 
 module.exports = {
   siteMetadata: {
@@ -27,8 +28,8 @@ module.exports = {
         link: '/',
       },
       {
-        name: 'Post',
-        link: '/post',
+        name: 'News',
+        link: '/news',
       },
       {
         name: 'Book',
@@ -90,6 +91,7 @@ module.exports = {
         },
         assets: {
           dirPrefix: YUQUE_ASSETS_DIR_PREFIX,
+          remotePrefix: YUQUE_ASSETS_REMOTE_PREFIX,
         }
       }
     },
