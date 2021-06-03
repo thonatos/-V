@@ -111,9 +111,15 @@ const columns = [
     render: (val: string) => val && val.toUpperCase(),
   },
   {
-    title: 'Timestamp',
-    dataIndex: 'timestamp',
-    key: 'timestamp',
+    title: 'Created',
+    dataIndex: 'created_at',
+    key: 'created_at',
+    render: (val: Date) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
+  },
+   {
+    title: 'Updated',
+    dataIndex: 'updated_at',
+    key: 'updated_at',
     render: (val: Date) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
   },
 ];
