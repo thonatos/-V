@@ -116,7 +116,7 @@ const columns = [
     key: 'created_at',
     render: (val: Date) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
   },
-   {
+  {
     title: 'Updated',
     dataIndex: 'updated_at',
     key: 'updated_at',
@@ -141,10 +141,13 @@ const AutomationPage: FC<Props> = () => {
 
   const {
     data, error, loading, run,
-  } = useRequest(() => ({
-    url: 'https://api.implements.io/orders',
-    method: 'get',
-  }));
+  } = useRequest(() => {
+    const query = `_sort=created_at:DESC&_limit=100`;
+    return {
+      url: `https://api.implements.io/orders?${query}`,
+      method: 'get',
+    };
+  });
 
   if (error) {
     return null;
@@ -152,7 +155,7 @@ const AutomationPage: FC<Props> = () => {
 
   return (
     <Layout title="Automation">
-      <Affix style={{ position: 'absolute', bottom: 16, right: 16 }}>
+      <Affix style={{ position: 'absolute', bottom: 16, right: 16, zIndex: 999 }}>
         <Button type="primary" onClick={() => toggle()}>
           <CalculatorOutlined />
           {' '}
@@ -182,6 +185,9 @@ const AutomationPage: FC<Props> = () => {
           columns={columns}
           dataSource={data}
           scroll={{ x: 1300 }}
+          pagination={{
+            pageSize: 100,
+          }}
         />
 
         <Drawer
