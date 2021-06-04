@@ -12,7 +12,7 @@ import Detail from '@/components/page/Detail';
 import Calculator from '@/components/Calculator';
 import {
   formatName, formatValue, formatPercent, formatStatus, formatDate,
-} from './util';
+} from '@/components/util';
 
 import * as styles from './index.module.less';
 
