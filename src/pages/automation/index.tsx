@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import dayjs from 'dayjs';
 import {
-  Space, Drawer, Table, Button, Tag,
+  Space, Drawer, Table, Button, Tag, Typography,
 } from 'antd';
 import {
   useRequest, useBoolean, useResponsive, useReactive,
@@ -11,45 +10,11 @@ import { CalculatorOutlined, ReloadOutlined } from '@ant-design/icons';
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
 import Calculator from '@/components/Calculator';
+import {
+  formatName, formatValue, formatPercent, formatStatus, formatDate,
+} from './util';
 
 import * as styles from './index.module.less';
-
-const STATUS_MAP = {
-  close: undefined,
-  exit: 'red',
-};
-
-const formatName = (val: string) => {
-  if (!val) {
-    return null;
-  }
-
-  return val.toUpperCase();
-};
-
-const formatPercent = (val: number) => {
-  if (!val) {
-    return '-';
-  }
-
-  return `${val}%`;
-};
-
-const formatValue = (val: number) => {
-  if (!val) {
-    return '-';
-  }
-
-  return `$${val.toFixed(8)}`;
-};
-
-const formatStatus = (val: STATUS_TYPE) => {
-  if (!val) {
-    return '-';
-  }
-
-  return <Tag color={STATUS_MAP[val]}>{val.toUpperCase()}</Tag>;
-};
 
 const columns = [
   {
@@ -78,6 +43,7 @@ const columns = [
   {
     title: 'Take Profit',
     dataIndex: 'take_profit',
+    width: 120,
     key: 'take_profit',
     render: formatPercent,
   },
@@ -85,6 +51,7 @@ const columns = [
     title: 'Stop Loss',
     dataIndex: 'stop_loss',
     key: 'stop_loss',
+    width: 120,
     render: formatPercent,
   },
   {
@@ -130,9 +97,10 @@ const columns = [
 
       return (
         <Tag color={color}>
-          { `$${(direction * profit).toFixed(4)}`}
+          {`$${(direction * profit).toFixed(4)}`}
           {' '}
           /
+          {' '}
           {`${(direction * percent).toFixed(4)}%`}
         </Tag>
       );
@@ -148,23 +116,15 @@ const columns = [
     title: 'Created',
     dataIndex: 'created_at',
     key: 'created_at',
-    render: (val: Date) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
+    render: formatDate,
   },
   {
     title: 'Updated',
     dataIndex: 'updated_at',
     key: 'updated_at',
-    render: (val: Date) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
+    render: formatDate,
   },
 ];
-
-const DRAWER_WIDTH_MAP = {
-  phone: 300,
-  table: 480,
-  desktop: 800,
-};
-
-type Device = 'phone' | 'table' | 'desktop';
 
 const AutomationPage: FC<Props> = () => {
   const state = useReactive({
@@ -173,10 +133,25 @@ const AutomationPage: FC<Props> = () => {
   });
 
   const [visible, { toggle }] = useBoolean(false);
-  const responsive = useResponsive();
-  const [device] = Object.entries(responsive || {}).find(([, actived]) => !actived) || [];
 
-  const drawerWith = device ? DRAWER_WIDTH_MAP[device as Device] : 400;
+  const responsive = useResponsive() || {};
+  const isLarge = responsive.large;
+  const isMiddle = responsive.middle;
+  const isSmall = responsive.small;
+
+  let drawerWith = 400;
+
+  if (isSmall) {
+    drawerWith = 300;
+  }
+
+  if (isMiddle) {
+    drawerWith = 480;
+  }
+
+  if (isLarge) {
+    drawerWith = 800;
+  }
 
   const {
     data: count, run: runCount,
@@ -226,32 +201,35 @@ const AutomationPage: FC<Props> = () => {
   return (
     <Layout title="Automation">
       <Detail>
-
         <Table
           rowKey="id"
           loading={loading}
           title={() => (
-            <div className={styles.title}>
-              <span>Quantitative/Automation Trading</span>
-
-              <Space>
+            <div
+              className={styles.title}
+              style={{
+                flexDirection: isLarge ? 'row' : 'column',
+              }}
+            >
+              <div>
+                <Typography.Title level={4}>Quantitative/Automation Trading</Typography.Title>
+              </div>
+              <Space align="center" direction="horizontal">
                 <Button
                   type="primary"
                   size="small"
+                  icon={<ReloadOutlined />}
                   onClick={handleReload}
                 >
-                  <ReloadOutlined />
-                  {' '}
                   Reload
                 </Button>
 
                 <Button
                   type="primary"
                   size="small"
+                  icon={<CalculatorOutlined />}
                   onClick={() => toggle()}
                 >
-                  <CalculatorOutlined />
-                  {' '}
                   Calculator
                 </Button>
               </Space>
@@ -294,5 +272,3 @@ interface Order {
   close: number;
   contracts: number;
 }
-
-type STATUS_TYPE = 'close' | 'exit';
