@@ -1,16 +1,23 @@
 import React, { FC } from 'react';
 import dayjs from 'dayjs';
 import {
-  Affix, Drawer, Table, Button,
+  Space, Drawer, Table, Button, Tag,
 } from 'antd';
-import { useRequest, useBoolean, useResponsive } from 'ahooks';
-import { CalculatorOutlined } from '@ant-design/icons';
+import {
+  useRequest, useBoolean, useResponsive, useReactive,
+} from 'ahooks';
+import { CalculatorOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import Layout from '@/layouts/default';
 import Detail from '@/components/page/Detail';
 import Calculator from '@/components/Calculator';
 
 import * as styles from './index.module.less';
+
+const STATUS_MAP = {
+  close: undefined,
+  exit: 'red',
+};
 
 const formatName = (val: string) => {
   if (!val) {
@@ -28,7 +35,21 @@ const formatPercent = (val: number) => {
   return `${val}%`;
 };
 
-const formatValue = (val: number) => val || '-';
+const formatValue = (val: number) => {
+  if (!val) {
+    return '-';
+  }
+
+  return `$${val.toFixed(8)}`;
+};
+
+const formatStatus = (val: STATUS_TYPE) => {
+  if (!val) {
+    return '-';
+  }
+
+  return <Tag color={STATUS_MAP[val]}>{val.toUpperCase()}</Tag>;
+};
 
 const columns = [
   {
@@ -87,28 +108,41 @@ const columns = [
     title: 'Profit',
     dataIndex: 'profit',
     key: 'profit',
-    render: (_: number, record: any) => {
+    render: (_: number, record: Order) => {
       const {
         side, open, close, contracts,
       } = record;
+
+      if (!side) {
+        return '-';
+      }
+
+      if (!close) {
+        return '-';
+      }
+
       const diff = close - open;
+      const profit = diff * contracts;
+      const percent = (diff / open) * 100;
 
-      if (side === 'long') {
-        return (diff * contracts).toFixed(4);
-      }
+      const direction = side === 'long' ? 1 : -1;
+      const color = direction * diff > 0 ? 'green' : 'red';
 
-      if (side === 'short') {
-        return -(diff * contracts).toFixed(4);
-      }
-
-      return '';
+      return (
+        <Tag color={color}>
+          { `$${(direction * profit).toFixed(4)}`}
+          {' '}
+          /
+          {`${(direction * percent).toFixed(4)}%`}
+        </Tag>
+      );
     },
   },
   {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    render: (val: string) => val && val.toUpperCase(),
+    render: formatStatus,
   },
   {
     title: 'Created',
@@ -133,6 +167,11 @@ const DRAWER_WIDTH_MAP = {
 type Device = 'phone' | 'table' | 'desktop';
 
 const AutomationPage: FC<Props> = () => {
+  const state = useReactive({
+    current: 1,
+    pageSize: 20,
+  });
+
   const [visible, { toggle }] = useBoolean(false);
   const responsive = useResponsive();
   const [device] = Object.entries(responsive || {}).find(([, actived]) => !actived) || [];
@@ -140,14 +179,45 @@ const AutomationPage: FC<Props> = () => {
   const drawerWith = device ? DRAWER_WIDTH_MAP[device as Device] : 400;
 
   const {
-    data, error, loading, run,
+    data: count, run: runCount,
+  } = useRequest(() => ({
+    url: 'https://api.implements.io/orders/count',
+    method: 'get',
+  }));
+
+  const {
+    data: orders, error, loading, run: runOrders,
   } = useRequest(() => {
-    const query = `_sort=created_at:DESC&_limit=100`;
+    const skip = (state.current - 1) * state.pageSize;
+    const query = `_sort=created_at:DESC&_limit=${state.pageSize}&_start=${skip}`;
     return {
       url: `https://api.implements.io/orders?${query}`,
       method: 'get',
     };
+  }, {
+    ready: !!count,
   });
+
+  const load = async () => {
+    await runCount();
+    await runOrders();
+  };
+
+  const handleReload = async () => {
+    state.current = 1;
+    state.pageSize = 20;
+
+    load();
+  };
+
+  const handleChange = async (pageNumber: number, pageSize?: number) => {
+    state.current = pageNumber;
+    if (pageSize) {
+      state.pageSize = pageSize;
+    }
+
+    load();
+  };
 
   if (error) {
     return null;
@@ -155,14 +225,6 @@ const AutomationPage: FC<Props> = () => {
 
   return (
     <Layout title="Automation">
-      <Affix style={{ position: 'absolute', bottom: 16, right: 16, zIndex: 999 }}>
-        <Button type="primary" onClick={() => toggle()}>
-          <CalculatorOutlined />
-          {' '}
-          Calculator
-        </Button>
-      </Affix>
-
       <Detail>
 
         <Table
@@ -171,22 +233,39 @@ const AutomationPage: FC<Props> = () => {
           title={() => (
             <div className={styles.title}>
               <span>Quantitative/Automation Trading</span>
-              <Button
-                type="primary"
-                size="small"
-                onClick={() => {
-                  run();
-                }}
-              >
-                Reload
-              </Button>
+
+              <Space>
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={handleReload}
+                >
+                  <ReloadOutlined />
+                  {' '}
+                  Reload
+                </Button>
+
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => toggle()}
+                >
+                  <CalculatorOutlined />
+                  {' '}
+                  Calculator
+                </Button>
+              </Space>
             </div>
           )}
           columns={columns}
-          dataSource={data}
+          dataSource={orders}
           scroll={{ x: 1300 }}
           pagination={{
-            pageSize: 100,
+            total: count || 0,
+            current: state.current,
+            pageSize: state.pageSize,
+            showSizeChanger: true,
+            onChange: handleChange,
           }}
         />
 
@@ -208,3 +287,12 @@ const AutomationPage: FC<Props> = () => {
 export default AutomationPage;
 
 interface Props { }
+
+interface Order {
+  side: string;
+  open: number;
+  close: number;
+  contracts: number;
+}
+
+type STATUS_TYPE = 'close' | 'exit';
